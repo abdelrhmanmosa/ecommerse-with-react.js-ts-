@@ -1,15 +1,11 @@
 interface IProps {
-  textUrl: string;
+  imageURL: string;
   alt: string;
   className?: string;
 }
 
-const Images = ({ textUrl, alt, className }: IProps) => {
-  return (
-    <div>
-      <img src={textUrl} alt={alt} className={className} />
-    </div>
-  );
+const Images = ({ imageURL, alt, className }: IProps) => {
+  return <img src={imageURL} alt={alt} className={className} />;
 };
 
 export default Images;
