@@ -1,5 +1,5 @@
 import { IProduct } from "../interfaces";
-import { textCut } from "../utils/functions";
+import { numberWithCommas, textCut } from "../utils/functions";
 import CircleColor from "./CircleColor";
 import Images from "./Images";
 import Button from "./ui/Button";
@@ -10,6 +10,7 @@ interface IProps {
   openEditModal: () => void;
   idx: number;
   setProductToEditIdx: (value: number) => void;
+  openDeleteModal: () => void;
 }
 const ProductCard = ({
   product,
@@ -17,6 +18,7 @@ const ProductCard = ({
   openEditModal,
   idx,
   setProductToEditIdx,
+  openDeleteModal,
 }: IProps) => {
   const { title, description, price, imageURL, category, colors } = product;
 
@@ -29,6 +31,10 @@ const ProductCard = ({
     setProductToEdit(product);
     openEditModal();
     setProductToEditIdx(idx);
+  };
+  const onRemove = () => {
+    openDeleteModal();
+    setProductToEdit(product);
   };
 
   return (
@@ -47,7 +53,9 @@ const ProductCard = ({
         {renderProductColor}
       </div>
       <div className="flex items-center justify-between">
-        <span className="text-lg text-indigo-600 font-semibold">${price}</span>
+        <span className="text-lg text-indigo-600 font-semibold">
+          ${numberWithCommas(price)}
+        </span>
         <div className="flex items-center">
           <span className="text-xs font-semibold mr-2">{category.name}</span>
           <Images
@@ -62,7 +70,9 @@ const ProductCard = ({
         <Button className="bg-blue-800" onClick={onEdit}>
           EDIT
         </Button>
-        <Button className="bg-red-800">DELETE</Button>
+        <Button className="bg-red-800" onClick={onRemove}>
+          REMOVE
+        </Button>
       </div>
     </div>
   );
