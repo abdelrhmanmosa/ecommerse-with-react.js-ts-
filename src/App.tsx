@@ -13,6 +13,7 @@ import { v4 as uuid } from "uuid";
 import SelectMenu from "./components/ui/Select";
 import { TproductName } from "./types";
 import toast, { Toaster } from "react-hot-toast";
+import { useCallback } from "react";
 
 function App() {
   const defaultProductObject = {
@@ -26,7 +27,10 @@ function App() {
       imageURL: "",
     },
   };
-  //? state
+  //? states
+  // const inputRef = useRef<null | HTMLInputElement>(null);
+  // console.log(inputRef.current!.value);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenModalEdit, setIsOpenModalEdit] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -46,31 +50,28 @@ function App() {
   // console.log(productToEdit);
   // console.log(productToEditIdx);
   //** Handlers
-  function closeModal() {
+
+  const closeModal = useCallback(() => {
     setIsOpen(false);
-  }
-  function openModal() {
+  }, []);
+
+  const openModal = () => {
     setIsOpen(true);
-  }
-  function closeEditModal() {
-    setIsOpenModalEdit(false);
-  }
-  function openEditModal() {
-    setIsOpenModalEdit(true);
-  }
-  const closeDeleteModal = () => setIsOpenDeleteModal(false);
-  const openDeleteModal = () => setIsOpenDeleteModal(true);
-  const renderInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    setProduct({
-      ...product,
-      [name]: value,
-    });
-    setErrors({
-      ...errors,
-      [name]: "",
-    });
   };
+
+  const closeEditModal = () => setIsOpenModalEdit(false);
+  const openEditModal = useCallback(() => {
+    setIsOpenModalEdit(true);
+  }, []);
+  const closeDeleteModal = () => setIsOpenDeleteModal(false);
+  const openDeleteModal = useCallback(() => {
+    setIsOpenDeleteModal(true);
+  }, []);
+  const renderInputHandler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+    setProduct((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  }, []);
   //* Edit form
   const renderInputEditHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -122,13 +123,13 @@ function App() {
       setTemp([]);
       closeModal();
     }
-    toast('Product has been added!', {
-      icon: '👏',
+    toast("Product has been added!", {
+      icon: "👏",
       style: {
         backgroundColor: "blue",
-        color: "white"
-      }
-    })
+        color: "white",
+      },
+    });
   };
   //* on submitEdit
   const submitEditHandler = (event: FormEvent<HTMLFormElement>): void => {
